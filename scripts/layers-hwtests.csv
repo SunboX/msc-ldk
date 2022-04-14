@@ -1,0 +1,4 @@
+# Description: MSC hwtests
+# Relative GIT Repository,Layer subdirectory in repository,Tag/Branch to checkout in develop MSC-LDK branch
+msc/0624/meta-msc-ldk-hwtests,,
+msc/0624/meta-msc-ldk-hwtests-recipes,,

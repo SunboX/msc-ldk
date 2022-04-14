@@ -1,0 +1,5 @@
+# Define the image_types we want to build for our BSP
+IMAGE_TYPES_FOR_ALL ?= msc-image-base msc-image-sato
+IMAGE_TYPES ?= ${IMAGE_TYPES_FOR_ALL} msc-image-sato-sdk
+
+all:: ${IMAGE_TYPES_FOR_ALL}

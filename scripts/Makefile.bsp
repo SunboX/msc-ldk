@@ -1,0 +1,96 @@
+#
+# @file       Makefile.bsp
+#
+#    @copyright  Copyright (C) 2014 by MSC Technologies GmbH
+#
+#    Alle Rechte vorbehalten. Dieses Dokument ist Eigentum der
+#    MSC Technologies GmbH und unterliegt dem Schutz des Urheberrechtes. Die
+#    Vervielfaeltigung oder Weitergabe dieses Dokumentes im Ganzen oder
+#    auszugsweise, sowie Verwertung oder Mitteilung ihres Inhaltes auch in
+#    Teilen ist nicht gestattet, soweit nicht ausdruecklich schriftlich
+#    zugestanden. Zuwiderhandlungen verpflichten zu Schadenersatz
+#    MSC behaelt sich alle Rechte fuer den Fall einer Patenterteilung oder
+#    Gebrauchsmuster-Eintragung vor.
+#
+#    All rights reserved. This document is the property of MSC Technologies GmbH
+#    and stays under intellectual property rights. Copying of this document,
+#    giving it to others as a whole or in extracts and the use or communication
+#    of the contents thereof as well in fragments is forbidden without express
+#    written authority. Offenders are liable to the payment of damages.
+#    All rights are reserved in the event of the grant of a patent or the
+#    registration of a utility model or design.
+#
+#    @date        2014
+#
+#    @author      Markus Pietrek
+#
+
+BITBAKE_FLAGS ?= -k
+
+# overwrite it in Makefile.bsp.in to install into a different subdirectory within DESTDIR
+BSP_SUBDIR ?=
+
+include Makefile.in
+include Makefile.bsp.in
+
+BSP_NUMBER=$(shell head -n 1 .bsp.txt)
+VARIANT=$(shell head -n 1 .variant.txt)
+DESTDIR_IMAGES=${DESTDIR}/${BSP_NUMBER}${VARIANT}/${BSP_SUBDIR}
+DESTDIR_RPM=${DESTDIR_IMAGES}/rpm
+
+# RPMs that should be installed. Only add RPMs that are not part in the image but could be interesting to be installed later as copying everything takes a lot of time.
+SPECIAL_RPMS=*/azure-iot-sdks-tests-*
+
+.PHONY: $(IMAGE_TYPES)
+$(IMAGE_TYPES):
+	@./build.sh bitbake ${BITBAKE_FLAGS} $@
+
+.PHONY: test
+test::
+
+.PHONY: install
+install::
+	@if [ -z "${BSP_NUMBER}" ]; then \
+		echo "*** ERROR: BSP_NUMBER not determined, .bsp.txt not created by setup.txt?"; \
+		exit 1; \
+	fi
+
+	@if [ -z "${DESTDIR}" ]; then \
+		echo "*** ERROR: DESTDIR= not provided"; \
+		exit 1; \
+	fi
+
+	@install -d ${DESTDIR_IMAGES}
+
+	@cd tmp/deploy/images && \
+                shopt -s nullglob; \
+		for machine in *; do \
+			echo "Installing $${machine}"; \
+			for file in \
+                                    $${machine}/boot*.efi \
+                                    $${machine}/bzImage-$${machine}*.bin \
+                                    $${machine}/uImage-$${machine}*.bin \
+                                    $${machine}/*.dtb \
+				    $${machine}/initrd* \
+				    $${machine}/*$${machine}.hddimg \
+				    $${machine}/*$${machine}.iso \
+				    $${machine}/*$${machine}.tar.bz2 \
+				    $${machine}/*$${machine}.cpio.gz \
+				    $${machine}/*$${machine}.sdcard; \
+                                    do \
+				install -v -m644 $${file} ${DESTDIR_IMAGES}; \
+			done; \
+		done
+
+	@echo "Installing special RPMs to ${DESTDIR_RPM}"
+	@rm -rf ${DESTDIR_RPM}
+	@mkdir -p ${DESTDIR_RPM}
+	@(cd tmp/deploy/rpm && \
+		if [ "${SPECIAL_RPMS}" != "" ]; then \
+			for rpm in ${SPECIAL_RPMS}; do \
+				# If there is no file, the glob pattern might be set in rpm which is a non-existing file. \
+				if [ -e "$${rpm}" ]; then \
+				     install -v -m 644 "$${rpm}" "${DESTDIR_RPM}"; \
+				fi; \
+			done; \
+		fi )

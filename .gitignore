@@ -1,0 +1,19 @@
+build/
+doc/
+downloads/
+sstate-cache/
+scripts/libMscBoostPython.git
+scripts/MscBoost
+scripts/__pycache__
+scripts/maintainer.py
+
+# git wrapper and original
+bin/git
+bin/git.orig
+
+# these files are downloaded from separate repositories
+sources/
+
+# for compatibility
+scripts/recipes.sh
+scripts/maintainer.sh

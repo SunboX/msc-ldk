@@ -1,0 +1,4 @@
+IMAGE_TYPES_FOR_ALL ?= msc-image-lxqt
+IMAGE_TYPES ?= ${IMAGE_TYPES_FOR_ALL} msc-image-lxqt-sdk
+
+all:: ${IMAGE_TYPES_FOR_ALL}

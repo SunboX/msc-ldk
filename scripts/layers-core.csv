@@ -1,0 +1,8 @@
+Relative GIT Repository,Layer subdirectory in repository,Tag/Branch to checkout in develop MSC-LDK branch
+3rdparty/yocto,meta,
+3rdparty/openembedded/meta-openembedded,meta-oe,
+3rdparty/openembedded/meta-openembedded,meta-networking,
+3rdparty/openembedded/meta-openembedded,meta-python,
+msc/C984/meta-msc-ldk-core-recipes,,
+msc/C984/meta-msc-ldk-core,,
+msc/C984/meta-msc-ldk-mscio,,

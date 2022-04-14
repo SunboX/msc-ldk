@@ -1,0 +1,8 @@
+# Description: LXQt Desktop Environment
+# Relative GIT Repository,Layer subdirectory in repository,Tag/Branch to checkout in develop MSC-LDK branch
+msc/C984/meta-msc-ldk-lxqt,,
+3rdparty/openembedded/meta-openembedded,meta-networking,
+3rdparty/openembedded/meta-openembedded,meta-gnome,
+3rdparty/openembedded/meta-openembedded,meta-efl,
+3rdparty/meta-qt5,,
+3rdparty/meta-qt5-extra,,

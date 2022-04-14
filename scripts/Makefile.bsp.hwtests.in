@@ -1,0 +1,10 @@
+# Define the image_types we want to build for our BSP
+IMAGE_TYPES ?= msc-image-hwtests
+
+# we have to install into a different subdirectory to avoid a name clash
+# as our kernel bzImage-genericx86.bin has a different configuration than
+# the default BSP kernel bzImage-genericx86.bin
+
+BSP_SUBDIR = hwtests
+
+all:: ${IMAGE_TYPES}
